@@ -10,6 +10,9 @@
 // GLOBAL VARIABLES & CONSTANTS
 // ============================================================================
 
+// GOOGLE SHEET ID - REQUIRED CONFIGURATION
+const SHEET_ID = 'abcdefghijklmnopqrstuvwxyz123456789';
+
 const CONFIG = {
   // Sheet Names
   SHEETS: {
@@ -84,6 +87,7 @@ function onOpen() {
       .addToUi();
     
     Logger.log('✓ Menu created successfully');
+    Logger.log(`✓ Using Sheet ID: ${SHEET_ID}`);
   } catch (error) {
     Logger.log('✗ Error creating menu: ' + error);
   }
@@ -230,6 +234,12 @@ function writeMeritListToSheet(sheet, meritList) {
       student.choiceOrder.join(' → ')
     ]);
   });
+  
+  // Format header row
+  const headerRange = sheet.getRange(1, 1, 1, headers.length);
+  headerRange.setBackground('#2563eb');
+  headerRange.setFontColor('white');
+  headerRange.setFontWeight('bold');
 }
 
 // ============================================================================
@@ -428,6 +438,12 @@ function writeVacancyToSheet(sheet, vacancyData) {
   ];
   
   sheet.appendRow(headers);
+  
+  // Format header
+  const headerRange = sheet.getRange(1, 1, 1, headers.length);
+  headerRange.setBackground('#10b981');
+  headerRange.setFontColor('white');
+  headerRange.setFontWeight('bold');
 }
 
 // ============================================================================
@@ -503,6 +519,7 @@ function writeFinalAdmissionsToSheet(sheet, data) {
     'Application Number',
     'Student Name',
     'Total Marks',
+    'Percentage',
     'Category',
     'Gender',
     'Quota',
@@ -517,6 +534,12 @@ function writeFinalAdmissionsToSheet(sheet, data) {
   data.forEach(row => {
     sheet.appendRow(row);
   });
+  
+  // Format header
+  const headerRange = sheet.getRange(1, 1, 1, headers.length);
+  headerRange.setBackground('#2563eb');
+  headerRange.setFontColor('white');
+  headerRange.setFontWeight('bold');
 }
 
 // ============================================================================
@@ -767,7 +790,9 @@ function writeAllotmentToSheet(sheet, allotmentData) {
     'Gender',
     'Section',
     'Quota',
-    'Status'
+    'Status',
+    'Allotment Date',
+    'Choices Matched'
   ];
   
   sheet.appendRow(headers);
@@ -775,6 +800,12 @@ function writeAllotmentToSheet(sheet, allotmentData) {
   allotmentData.forEach(row => {
     sheet.appendRow(row);
   });
+  
+  // Format header
+  const headerRange = sheet.getRange(1, 1, 1, headers.length);
+  headerRange.setBackground('#2563eb');
+  headerRange.setFontColor('white');
+  headerRange.setFontWeight('bold');
 }
 
 // ============================================================================
@@ -802,13 +833,14 @@ function getStudentDetails(appNumber) {
           applicationNumber: data[i][1],
           studentName: data[i][2],
           marks: data[i][3],
-          category: data[i][4],
-          gender: data[i][5],
-          quota: data[i][6],
-          section: data[i][7],
-          round: data[i][8],
-          status: data[i][9],
-          admissionDate: data[i][10]
+          percentage: data[i][4],
+          category: data[i][5],
+          gender: data[i][6],
+          quota: data[i][7],
+          section: data[i][8],
+          round: data[i][9],
+          status: data[i][10],
+          admissionDate: data[i][11]
         };
       }
     }
@@ -835,6 +867,7 @@ function getDashboardData() {
     const totalAdmitted = finalSheet ? finalSheet.getLastRow() - 1 : 0;
     
     return {
+      sheetId: SHEET_ID,
       totalApplications: totalApplications,
       totalAdmitted: totalAdmitted,
       governmentFilled: 0,
@@ -849,3 +882,4 @@ function getDashboardData() {
 }
 
 Logger.log('✓ Code.gs loaded successfully');
+Logger.log(`✓ Sheet ID configured: ${SHEET_ID}`);
